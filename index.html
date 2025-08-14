@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ko">
 <head>
@@ -5,147 +6,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>부기 피하기</title>
   <style>
-    html,body{
-      margin:0;
-      padding:0;
-      height:100%;
-      overflow:hidden;
-      background:#f7f7fb;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans KR",sans-serif
-    }
-
-    /* 레이아웃 */
-    #stage{
-      width:100%;
-      height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      /* ▼ 버튼 높이만큼 공간 확보 (controls 높이 약 80px + 여유) */
-      padding-bottom:100px;
-      box-sizing:border-box;
-    }
+    html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#f7f7fb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans KR",sans-serif}
+    #stage{width:100%;height:100vh;display:flex;align-items:center;justify-content:center}
     #gameColumn{display:flex;flex-direction:column;align-items:center;gap:8px}
     #titleImg{display:block;height:auto}
-
-    /* 캔버스 스타일 */
-    canvas{
-      background:#fff;
-      border:2px dashed #ff3b30;
-      border-radius:12px;
-      box-shadow:0 8px 24px rgba(0,0,0,.08);
-      touch-action:none;
-      position:relative;
-      z-index:25;
-    }
-
+    canvas{background:#fff;border:2px dashed #ff3b30;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);touch-action:none}
     /* HUD 오른쪽 상단 */
-    #hud{
-      position:fixed;
-      top:8px;
-      right:8px;
-      z-index:30;
-      color:#000;
-      font-size:16px;
-      line-height:1.4;
-      background:rgba(255,255,255,.35);
-      padding:6px 8px;
-      border-radius:8px;
-      user-select:none;
-      pointer-events:none;
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      text-align:right;
-      align-items:flex-end
-    }
+    #hud{position:fixed;top:8px;right:8px;z-index:30;color:#000;font-size:16px;line-height:1.4;background:rgba(255,255,255,.35);
+         padding:6px 8px;border-radius:8px;user-select:none;pointer-events:none;display:flex;flex-direction:column;gap:4px;text-align:right;align-items:flex-end}
     #hud .row{display:flex;align-items:center;gap:6px;flex-direction:row-reverse}
     #hud img{width:20px;height:20px}
-
     /* 하단 버튼 */
-    #controls{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:20;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-      padding:env(safe-area-inset-bottom) 12px 12px 12px;
-      background:linear-gradient(180deg,rgba(247,247,251,0),rgba(247,247,251,.85) 40%,rgba(247,247,251,1));
-      box-sizing:border-box;
-    }
-    .btn{
-      -webkit-tap-highlight-color:transparent;
-      user-select:none;
-      text-align:center;
-      border-radius:14px;
-      padding:14px 12px;
-      font-weight:700;
-      font-size:18px;
-      background:#eef1ff;
-      border:2px solid #dde3ff
-    }
+    #controls{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:env(safe-area-inset-bottom) 12px 12px 12px;
+      background:linear-gradient(180deg,rgba(247,247,251,0),rgba(247,247,251,.85) 40%,rgba(247,247,251,1))}
+    .btn{-webkit-tap-highlight-color:transparent;user-select:none;text-align:center;border-radius:14px;padding:14px 12px;font-weight:700;font-size:18px;background:#eef1ff;border:2px solid #dde3ff}
     .btn:active,.btn.active{transform:translateY(1px);background:#e1e6ff}
-
-    /* 시작/게임오버 오버레이 */
-    #overlay{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      background:rgba(0,0,0,.35);
-      z-index:40;
-      padding:16px
-    }
-    #overlayCard{
-      width:min(420px,92vw);
-      background:#fff;
-      border-radius:16px;
-      box-shadow:0 16px 40px rgba(0,0,0,.25);
-      padding:20px;
-      text-align:center
-    }
-    #overlay h1{margin:4px 0 10px;font-size:24px}
-    #overlay p{margin:6px 0;color:#333}
-    #startBtn{
-      margin-top:14px;
-      width:100%;
-      padding:14px 12px;
-      font-weight:800;
-      font-size:18px;
-      border-radius:12px;
-      background:#e6fff2;
-      border:2px solid #c9f9df
-    }
+    /* 오버레이 */
+    #overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.35);z-index:40;padding:16px}
+    #overlayCard{width:min(420px,92vw);background:#fff;border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.25);padding:20px;text-align:center}
+    #overlay h1{margin:4px 0 10px;font-size:24px} #overlay p{margin:6px 0;color:#333}
+    #startBtn{margin-top:14px;width:100%;padding:14px 12px;font-weight:800;font-size:18px;border-radius:12px;background:#e6fff2;border:2px solid #c9f9df}
     #stats{font-size:15px;color:#555;line-height:1.5}
-
     /* 부트 에러 */
-    #bootErr{
-      position:fixed;
-      inset:0;
-      display:none;
-      place-items:center;
-      background:#fff;
-      color:#000;
-      z-index:9999;
-      padding:20px
-    }
+    #bootErr{position:fixed;inset:0;display:none;place-items:center;background:#fff;color:#000;z-index:9999;padding:20px}
     #bootErr pre{white-space:pre-wrap;word-break:break-all}
-
-    /* 터치 장치에서 버튼 터치 우선 */
-    @media (hover: none) and (pointer: coarse) {
-      canvas { pointer-events: none; }
-    }
   </style>
   <script>
-    function gameJsError(){
-      const e=document.getElementById('bootErr');
-      e.style.display='grid';
-      e.querySelector('pre').textContent='game.js 로드 실패(경로/파일명 확인)';
-    }
+    function gameJsError(){const e=document.getElementById('bootErr'); e.style.display='grid'; e.querySelector('pre').textContent='game.js 로드 실패(경로/파일명 확인)';}
   </script>
   <script src="game.js?v=SAFE" defer onerror="gameJsError()"></script>
 </head>
@@ -163,7 +50,7 @@
   <div id="stage">
     <div id="gameColumn">
       <img id="titleImg" src="title.png" alt="게임 타이틀">
-      <canvas id="gameCanvas" width="400" height="600" aria-label="game canvas" style="width:320px;height:480px;"></canvas>
+      <canvas id="gameCanvas" width="400" height="600" aria-label="game canvas"></canvas>
     </div>
   </div>
 
@@ -174,7 +61,7 @@
   </div>
 
   <!-- 시작/게임오버 -->
-  <div id="overlay">
+  <div id="overlay"> 
     <div id="overlayCard">
       <h1 id="overlayTitle">게임 시작</h1>
       <p id="overlayMsg">왼쪽/오른쪽 버튼으로 이동하세요.</p>
